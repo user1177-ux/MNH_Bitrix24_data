@@ -25,11 +25,11 @@ def fetch_data():
         return
 
     deals = response.json().get('result', [])
+    print(f"Найдено сделок: {len(deals)}")
+
     if not deals:
         print("Нет данных для указанного периода.")
         return
-
-    print(f"Найдено сделок: {len(deals)}")
 
     file_path = 'deals_data.csv'
     with open(file_path, mode='w', newline='', encoding='utf-8') as file:
