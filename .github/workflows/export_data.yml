@@ -3,7 +3,7 @@ name: Export Bitrix24 Data
 on:
   workflow_dispatch:
   schedule:
-    - cron: '08 30 * * *'  # 10:30 по времени Словении (GMT+2), что соответствует 08:30 по UTC
+    - cron: '30 8 * * *'  # 08:30 по UTC, что соответствует 10:30 по времени Словении (GMT+2)
 
 jobs:
   export-data:
