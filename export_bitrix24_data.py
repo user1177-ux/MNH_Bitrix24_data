@@ -14,7 +14,11 @@ def fetch_data():
         'select[]': 'TITLE'
     }
 
+    print("Отправка запроса к API...")
     response = requests.get(webhook_url, params=params)
+    print("Ответ от API получен.")
+
+    # Проверка статуса ответа
     if response.status_code != 200:
         print(f"Ошибка при запросе данных: {response.status_code}")
         print(response.text)
@@ -39,6 +43,9 @@ def fetch_data():
         f.write(f"\n# Last updated: {datetime.now().isoformat()}\n")
     
     print("Данные успешно выгружены и сохранены в файл", file_path)
+    print("Содержимое файла:")
+    with open(file_path, 'r', encoding='utf-8') as f:
+        print(f.read())
 
 if __name__ == "__main__":
     fetch_data()
