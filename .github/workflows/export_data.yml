@@ -24,6 +24,9 @@ jobs:
     - name: Run export script
       run: python export_bitrix24_data.py
 
+    - name: Display file content
+      run: cat deals_data.csv
+
     - name: Commit and push changes
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
