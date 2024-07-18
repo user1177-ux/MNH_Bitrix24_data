@@ -18,7 +18,6 @@ def fetch_data():
     response = requests.get(webhook_url, params=params)
     print("Ответ от API получен.")
 
-    # Проверка статуса ответа
     if response.status_code != 200:
         print(f"Ошибка при запросе данных: {response.status_code}")
         print(response.text)
@@ -32,18 +31,18 @@ def fetch_data():
         return
 
     file_path = 'deals_data.csv'
+    print("Запись данных в файл...")
     with open(file_path, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(['ID', 'DATE_CREATE', 'STAGE_ID', 'TITLE'])
         for deal in deals:
             writer.writerow([deal['ID'], deal['DATE_CREATE'], deal['STAGE_ID'], deal['TITLE']])
 
-    # Добавляем метку времени в конец файла, чтобы GitHub видел изменения
     with open(file_path, 'a') as f:
         f.write(f"\n# Last updated: {datetime.now().isoformat()}\n")
-    
+
     print("Данные успешно выгружены и сохранены в файл", file_path)
-    print("Содержимое файла:")
+    print("Содержимое файла после записи данных:")
     with open(file_path, 'r', encoding='utf-8') as f:
         print(f.read())
 
