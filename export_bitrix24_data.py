@@ -18,7 +18,9 @@ response = requests.get(webhook_url, params=params)
 
 # Проверка статуса ответа
 if response.status_code == 200:
+    print("Запрос выполнен успешно.")
     deals = response.json().get('result', [])
+    print(f"Найдено сделок: {len(deals)}")
     if deals:
         # Сохранение данных в CSV
         with open('deals_data.csv', mode='w', newline='', encoding='utf-8') as file:
