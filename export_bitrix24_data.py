@@ -1,41 +1,45 @@
 import requests
 import csv
+import os
 from datetime import datetime
 
-# Настройки
-webhook_url = 'https://b24-ll5zno.bitrix24.ru/rest/16/2ew5qznxbyfuzk6l/crm.deal.list.json'
-params = {
-    'filter[>DATE_CREATE]': '2024-07-01T00:00:00Z',
-    'filter[<DATE_CREATE]': '2024-07-15T23:59:59Z',
-    'filter[STAGE_ID]': '2',  # ID воронки сделок
-    'select[]': 'ID',
-    'select[]': 'DATE_CREATE',
-    'select[]': 'STAGE_ID',
-    'select[]': 'TITLE'
-}
+def fetch_data():
+    webhook_url = 'https://b24-ll5zno.bitrix24.ru/rest/16/2ew5qznxbyfuzk6l/crm.deal.list.json'
+    params = {
+        'filter[>DATE_CREATE]': '2024-07-01T00:00:00Z',
+        'filter[<DATE_CREATE]': '2024-07-15T23:59:59Z',
+        'filter[STAGE_ID]': '2',  # ID воронки сделок
+        'select[]': 'ID',
+        'select[]': 'DATE_CREATE',
+        'select[]': 'STAGE_ID',
+        'select[]': 'TITLE'
+    }
 
-print("Отправка запроса к API...")
-response = requests.get(webhook_url, params=params)
-print("Ответ от API получен.")
+    response = requests.get(webhook_url, params=params)
+    if response.status_code != 200:
+        print(f"Ошибка при запросе данных: {response.status_code}")
+        print(response.text)
+        return
 
-# Проверка статуса ответа
-if response.status_code == 200:
-    print("Запрос выполнен успешно.")
     deals = response.json().get('result', [])
-    print(f"Найдено сделок: {len(deals)}")
-    if deals:
-        # Сохранение данных в CSV
-        with open('deals_data.csv', mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerow(['ID', 'DATE_CREATE', 'STAGE_ID', 'TITLE'])
-            for deal in deals:
-                writer.writerow([deal['ID'], deal['DATE_CREATE'], deal['STAGE_ID'], deal['TITLE']])
-            # Добавление строки с датой и временем последнего обновления
-            writer.writerow([])
-            writer.writerow(['Последнее обновление:', datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
-        print("Данные успешно выгружены и сохранены в файл deals_data.csv")
-    else:
+    if not deals:
         print("Нет данных для указанного периода.")
-else:
-    print(f"Ошибка при запросе данных: {response.status_code}")
-    print(response.text)
+        return
+
+    print(f"Найдено сделок: {len(deals)}")
+
+    file_path = 'deals_data.csv'
+    with open(file_path, mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(['ID', 'DATE_CREATE', 'STAGE_ID', 'TITLE'])
+        for deal in deals:
+            writer.writerow([deal['ID'], deal['DATE_CREATE'], deal['STAGE_ID'], deal['TITLE']])
+
+    # Добавляем метку времени в конец файла, чтобы GitHub видел изменения
+    with open(file_path, 'a') as f:
+        f.write(f"\n# Last updated: {datetime.now().isoformat()}\n")
+    
+    print("Данные успешно выгружены и сохранены в файл", file_path)
+
+if __name__ == "__main__":
+    fetch_data()
