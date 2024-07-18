@@ -27,7 +27,7 @@ jobs:
       run: python export_bitrix24_data.py
 
     - name: Check if CSV file exists
-      run: ls -l deals_data.csv
+      run: cat deals_data.csv
 
     - name: Commit and push changes
       run: |
