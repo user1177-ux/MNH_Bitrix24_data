@@ -1,8 +1,5 @@
 import requests
 import pandas as pd
-import json
-import csv
-import os
 from datetime import datetime
 
 def fetch_data():
@@ -14,27 +11,41 @@ def fetch_data():
         'select[]': 'ID',
         'select[]': 'DATE_CREATE',
         'select[]': 'STAGE_ID',
-        'select[]': 'TITLE'
+        'select[]': 'TITLE',
+        'start': 0
     }
 
-    print("Отправка запроса к API...")
-    response = requests.get(webhook_url, params=params)
-    print("Ответ от API получен.")
+    all_deals = []
+    total = 0
 
-    if response.status_code != 200:
-        print(f"Ошибка при запросе данных: {response.status_code}")
-        print(response.text)
-        return
+    while True:
+        print(f"Отправка запроса к API... Старт: {params['start']}")
+        response = requests.get(webhook_url, params=params)
+        print("Ответ от API получен.")
 
-    deals = response.json().get('result', [])
-    print(f"Найдено сделок: {len(deals)}")
+        if response.status_code != 200:
+            print(f"Ошибка при запросе данных: {response.status_code}")
+            print(response.text)
+            return
 
-    if not deals:
+        deals = response.json().get('result', [])
+        print(f"Найдено сделок: {len(deals)}")
+
+        if not deals:
+            break
+
+        all_deals.extend(deals)
+        params['start'] += 50
+        total += len(deals)
+    
+    print(f"Общее количество сделок: {total}")
+
+    if not all_deals:
         print("Нет данных для указанного периода.")
         return
 
     # Преобразование данных в DataFrame
-    df = pd.DataFrame(deals)
+    df = pd.DataFrame(all_deals)
     file_path = 'deals_data.csv'
 
     # Запись данных в CSV файл
