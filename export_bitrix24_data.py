@@ -14,7 +14,9 @@ params = {
     'select[]': 'TITLE'
 }
 
+print("Отправка запроса к API...")
 response = requests.get(webhook_url, params=params)
+print("Ответ от API получен.")
 
 # Проверка статуса ответа
 if response.status_code == 200:
