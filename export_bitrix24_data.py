@@ -8,10 +8,12 @@ def fetch_data():
         'filter[>DATE_CREATE]': '2024-07-01T00:00:00Z',
         'filter[<DATE_CREATE]': '2024-07-15T23:59:59Z',
         'filter[CATEGORY_ID]': '2',  # ID воронки сделок
+        'filter[UF_CRM_1710065188]': '3814',
         'select[]': 'ID',
         'select[]': 'DATE_CREATE',
         'select[]': 'STAGE_ID',
         'select[]': 'TITLE',
+        'select[]': 'UF_CRM_1710065188',
         'start': 0
     }
 
