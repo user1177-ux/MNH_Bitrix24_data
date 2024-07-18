@@ -10,7 +10,7 @@ def fetch_data():
     params = {
         'filter[>DATE_CREATE]': '2024-07-01T00:00:00Z',
         'filter[<DATE_CREATE]': '2024-07-15T23:59:59Z',
-        'filter[STAGE_ID]': '2',  # ID воронки сделок
+        'filter[CATEGORY_ID]': '2',  # ID воронки сделок
         'select[]': 'ID',
         'select[]': 'DATE_CREATE',
         'select[]': 'STAGE_ID',
