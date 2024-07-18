@@ -1,5 +1,5 @@
 import requests
-import csv
+import pandas as pd
 from datetime import datetime
 
 def fetch_data():
@@ -30,14 +30,14 @@ def fetch_data():
         print("Нет данных для указанного периода.")
         return
 
+    # Преобразование данных в DataFrame
+    df = pd.DataFrame(deals)
     file_path = 'deals_data.csv'
-    print("Запись данных в файл...")
-    with open(file_path, mode='w', newline='', encoding='utf-8') as file:
-        writer = csv.writer(file)
-        writer.writerow(['ID', 'DATE_CREATE', 'STAGE_ID', 'TITLE'])
-        for deal in deals:
-            writer.writerow([deal['ID'], deal['DATE_CREATE'], deal['STAGE_ID'], deal['TITLE']])
 
+    # Запись данных в CSV файл
+    df.to_csv(file_path, index=False)
+
+    # Добавление метки времени в конец файла
     with open(file_path, 'a') as f:
         f.write(f"\n# Last updated: {datetime.now().isoformat()}\n")
 
